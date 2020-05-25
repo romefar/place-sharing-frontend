@@ -1,0 +1,10 @@
+.message-box-container { 
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+}
+
+.message-box-container__text { 
+    font-size: 1.5rem;
+}
