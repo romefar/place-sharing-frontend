@@ -1,11 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
-import Avatar from '../../../shared/avatar'
-import Card from '../../../shared/card'
+import Avatar from '../../../shared/UI-elements/avatar'
+import Card from '../../../shared/UI-elements/card'
 import './user-item.css'
 
-const UserItem = ({ item: { id, image, name, placeCount } }) => {
+const UserItem = ({ id, image, name, placeCount }) => {
   return (
     <li className="user-item">
       <Card className="user-item__content">
@@ -23,6 +24,13 @@ const UserItem = ({ item: { id, image, name, placeCount } }) => {
       </Card>
     </li>
   )
+}
+
+UserItem.propTypes = {
+  id: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  placeCount: PropTypes.number.isRequired
 }
 
 export default UserItem
