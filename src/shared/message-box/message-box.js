@@ -1,6 +1,7 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
-import Card from '../card'
+import Card from '../UI-elements/card'
 
 import './message-box.css'
 
@@ -12,6 +13,10 @@ const MessageBox = ({ text }) => {
       </Card>
     </div>
   )
+}
+
+MessageBox.propTypes = {
+  text: PropTypes.string.isRequired
 }
 
 export default MessageBox
