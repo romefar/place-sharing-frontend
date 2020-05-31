@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 import UserContainer from '../user/containers/user-container'
 import MainNavigation from '../shared/navigation/main-navigation'
+import UserPlacesContainer from '../places/containers/user-places-container'
+import NewPlace from '../places/components/new-place'
 
 import './app.css'
 
@@ -12,8 +14,9 @@ const App = () => {
       <MainNavigation />
       <main>
         <Switch>
-          <Route path="/" render={() => <h2>Welcome home//-//</h2>} exact/>
-          <Route path="/users" component={UserContainer} exact/>
+          <Route path="/" component={UserContainer} exact/>
+          <Route path="/:userId/places" component={UserPlacesContainer} exact />
+          <Route path="/places/new" component={NewPlace} exact />
           <Route render={() => <h1>404 page was not found</h1>} />
         </Switch>
       </main>
