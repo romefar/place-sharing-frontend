@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import Header from '../header'
 import NavLinks from '../nav-links'
 import SideDrawer from '../side-drawer'
-import Backdrop from '../../backdrop'
+import Backdrop from '../../UI-elements/backdrop'
 
 import './main-navigation.css'
 
