@@ -18,7 +18,7 @@ const PLACES = [
   },
   {
     id: 'u2',
-    title: 'Emprie State Building',
+    title: 'Emprie State Building 2222',
     description: 'The most famouse place in the world',
     imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Empire_State_Building_from_the_Top_of_the_Rock.jpg/280px-Empire_State_Building_from_the_Top_of_the_Rock.jpg',
     address: '20 W 34th St, New York, NY 10001, USA',
