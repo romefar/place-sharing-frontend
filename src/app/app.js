@@ -1,26 +1,52 @@
-import React from 'react'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import React, { useState, useCallback } from 'react'
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 
 import UserContainer from '../user/containers/user-container'
 import MainNavigation from '../shared/navigation/main-navigation'
 import UserPlacesContainer from '../places/containers/user-places-container'
+import SignUpContainer from '../authorization/containers/sign-up-container'
 import NewPlace from '../places/components/new-place'
+import UpdatePlace from '../places/components/update-place'
+import AuthContext from '../shared/context/auth-context'
 
 import './app.css'
 
 const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  const login = useCallback(() => setIsLoggedIn(true), [])
+  const logout = useCallback(() => setIsLoggedIn(false), [])
+
+  let routes = null
+  if (isLoggedIn) {
+    routes = (
+      <Switch>
+        <Route path="/" component={UserContainer} exact/>
+        <Route path="/:userId/places" component={UserPlacesContainer} exact />
+        <Route path="/places/new" component={NewPlace} exact />
+        <Route path="/places/:placeId" component={UpdatePlace} exact />
+        <Redirect to="/" />
+      </Switch>
+    )
+  } else {
+    routes = (
+      <Switch>
+        <Route path="/" component={UserContainer} exact/>
+        <Route path="/:userId/places" component={UserPlacesContainer} exact />
+        <Route path="/auth" component={SignUpContainer} exact />
+        <Redirect to="/auth" />
+      </Switch>
+    )
+  }
   return (
-    <Router>
-      <MainNavigation />
-      <main>
-        <Switch>
-          <Route path="/" component={UserContainer} exact/>
-          <Route path="/:userId/places" component={UserPlacesContainer} exact />
-          <Route path="/places/new" component={NewPlace} exact />
-          <Route render={() => <h1>404 page was not found</h1>} />
-        </Switch>
-      </main>
-    </Router>
+    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+      <Router>
+        <MainNavigation />
+        <main>
+          {routes}
+        </main>
+      </Router>
+    </AuthContext.Provider>
   )
 }
 
