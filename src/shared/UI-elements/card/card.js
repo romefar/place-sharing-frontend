@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import PropTypes, { any } from 'prop-types'
 
 import './card.css'
 
@@ -14,7 +14,7 @@ const Card = ({ className, style, children }) => {
 Card.propTypes = {
   className: PropTypes.string,
   style: PropTypes.string,
-  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.element), PropTypes.string])
+  children: any
 }
 
 export default Card
