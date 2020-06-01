@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 import PlaceItem from '../place-item'
 import Card from '../../../shared/UI-elements/card'
+import Button from '../../../shared/form-elements/button'
 
 import './place-list.css'
 
@@ -11,7 +12,7 @@ const NoPlacesFound = () => {
     <div className="place-list center">
       <Card>
         <h2>No places found. Would you like to create a new one?</h2>
-        <button>Share place</button>
+        <Button to="/places/new">Share place</Button>
       </Card>
     </div>
   )
