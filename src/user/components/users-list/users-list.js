@@ -7,18 +7,18 @@ import UserItem from '../user-item'
 import './users-list.css'
 
 const UsersList = ({ items }) => {
-  if (items.length === 0) {
+  if (!items || items.length === 0) {
     return <MessageBox text="No users found." />
   }
 
   return (
     <ul className="users-list">
-      {items.map(({ id, image, name, placeCount }) => {
+      {items.map(({ id, image, name, places }) => {
         return <UserItem key={id}
           id={id}
           image={image}
           name={name}
-          placeCount={placeCount}
+          placeCount={places.length}
         />
       })}
     </ul>
