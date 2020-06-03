@@ -1,39 +1,42 @@
-import React from 'react'
+import React, { useEffect, useState, Fragment } from 'react'
 import { useParams } from 'react-router-dom'
 
 import PlaceList from '../components/place-list'
-
-const PLACES = [
-  {
-    id: 'u1',
-    title: 'Emprie State Building',
-    description: 'The most famouse place in the world',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Empire_State_Building_from_the_Top_of_the_Rock.jpg/280px-Empire_State_Building_from_the_Top_of_the_Rock.jpg',
-    address: '20 W 34th St, New York, NY 10001, USA',
-    location: {
-      lat: 40.7484445,
-      lng: -73.9878531
-    },
-    creatorId: 'ul1'
-  },
-  {
-    id: 'u2',
-    title: 'Emprie State Building 2222',
-    description: 'The most famouse place in the world',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Empire_State_Building_from_the_Top_of_the_Rock.jpg/280px-Empire_State_Building_from_the_Top_of_the_Rock.jpg',
-    address: '20 W 34th St, New York, NY 10001, USA',
-    location: {
-      lat: 40.7484445,
-      lng: -73.9878531
-    },
-    creatorId: 'ul2'
-  }
-]
+import useHttpClient from '../../shared/hooks/http-hook'
+import ErrorModal from '../../shared/UI-elements/error-modal'
+import LoadingSpinner from '../../shared/UI-elements/loading-spinner'
 
 const UserPlacesContainer = () => {
   const userId = useParams().userId
-  const usersPlaces = PLACES.filter(place => place.creatorId === userId)
-  return <PlaceList items={usersPlaces} />
+  const { isLoading, error, sendRequest, clearError } = useHttpClient()
+  const [loadedPlaces, setLoadedPlaces] = useState()
+
+  useEffect(() => {
+    const fetchUserPlaces = async () => {
+      try {
+        const responseData = await sendRequest(`http://localhost:3001/api/places/user/${userId}`)
+        setLoadedPlaces(responseData.places)
+      } catch (error) {
+      }
+    }
+    fetchUserPlaces()
+  }, [sendRequest, userId])
+
+  const onDeleteHandler = (deletedPlaceId) => {
+    setLoadedPlaces(prevPlaces => prevPlaces.filter(place => place.id !== deletedPlaceId))
+  }
+
+  return (
+    <Fragment>
+      <ErrorModal error={error} onClear={clearError}/>
+      {isLoading && (
+        <div className="center">
+          <LoadingSpinner />
+        </div>
+      )}
+      {!isLoading && loadedPlaces && <PlaceList items={loadedPlaces} onDelete={onDeleteHandler} />}
+    </Fragment>
+  )
 }
 
 export default UserPlacesContainer
