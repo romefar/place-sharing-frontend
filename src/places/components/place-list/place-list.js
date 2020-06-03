@@ -18,23 +18,23 @@ const NoPlacesFound = () => {
   )
 }
 
-const PlaceList = ({ items }) => {
+const PlaceList = ({ items, onDelete }) => {
   if (items.length === 0) {
     return <NoPlacesFound />
   }
-
   return (
     <ul className="place-list">
-      {items.map(({ id, imageUrl, title, description, address, creatorId, location }) => (
+      {items.map(({ id, image, title, description, address, creatorId, location }) => (
         <PlaceItem
           key={id}
           id={id}
-          imageUrl={imageUrl}
+          image={image}
           title={title}
           description={description}
           address={address}
           creatorId={creatorId}
           location={location}
+          onDelete={onDelete}
         />
       )) }
     </ul>
@@ -42,7 +42,8 @@ const PlaceList = ({ items }) => {
 }
 
 PlaceList.propTypes = {
-  items: PropTypes.array.isRequired
+  items: PropTypes.array.isRequired,
+  onDelete: PropTypes.func.isRequired
 }
 
 export default PlaceList
