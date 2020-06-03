@@ -6,26 +6,36 @@ import Card from '../../../shared/UI-elements/card'
 import Modal from '../../../shared/UI-elements/modal'
 import Map from '../../../shared/UI-elements/map'
 import AuthContext from '../../../shared/context/auth-context'
+import useHttpClient from '../../../shared/hooks/http-hook'
+import ErrorModal from '../../../shared/UI-elements/error-modal'
+import LoadingSpinner from '../../../shared/UI-elements/loading-spinner'
 
 import './place-item.css'
 
-const PlaceItem = ({ id, imageUrl, title, description, address, creatorId, location }) => {
-  const { isLoggedIn } = useContext(AuthContext)
+const PlaceItem = ({ id, image, title, description, address, creatorId, onDelete, location }) => {
+  const { userId } = useContext(AuthContext)
   const [showMap, setMapVisibility] = useState(false)
   const [showConfirmModal, setConfirmModalVisibility] = useState(false)
+  const { isLoading, error, sendRequest, clearError } = useHttpClient()
 
   const showMapHandler = () => setMapVisibility(true)
   const closeMapHandler = () => setMapVisibility(false)
 
   const showDeleteModalHandler = () => setConfirmModalVisibility(true)
   const closeDeleteModalHandler = () => setConfirmModalVisibility(false)
-  const confirmDeleteHandler = () => {
+  const confirmDeleteHandler = async () => {
     closeDeleteModalHandler()
-    console.log('Deleting')
+    try {
+      await sendRequest(`http://localhost:3001/api/places/${id}`, 'DELETE')
+      onDelete(id)
+    } catch (error) {
+
+    }
   }
 
   return (
     <Fragment>
+      <ErrorModal error={error} onClear={clearError}/>
       <Modal
         show={showMap}
         onCancel={closeMapHandler}
@@ -50,10 +60,11 @@ const PlaceItem = ({ id, imageUrl, title, description, address, creatorId, locat
         }>
         <p>Do you want to delete this place? Please note that it cannot be undone. </p>
       </Modal>
-      <li className="place-item-actions">
+      {isLoading && <LoadingSpinner asOverlay />}
+      <li className="place-item">
         <Card className="place-item__content">
           <div className="place-item__image">
-            <img src={imageUrl} alt={title}/>
+            <img src={image} alt={title}/>
           </div>
           <div className="place-item__info">
             <h2>{title}</h2>
@@ -62,8 +73,8 @@ const PlaceItem = ({ id, imageUrl, title, description, address, creatorId, locat
           </div>
           <div className="place-item__actions">
             <Button inverse onClick={showMapHandler}>View on map</Button>
-            { isLoggedIn && <Button to={`/places/${id}`}>Edit</Button>}
-            { isLoggedIn && <Button danger onClick={showDeleteModalHandler}>Delete</Button>}
+            { userId === creatorId && <Button to={`/places/${id}`}>Edit</Button>}
+            { userId === creatorId && <Button danger onClick={showDeleteModalHandler}>Delete</Button>}
           </div>
         </Card>
       </li>
@@ -73,12 +84,13 @@ const PlaceItem = ({ id, imageUrl, title, description, address, creatorId, locat
 
 PlaceItem.propTypes = {
   id: PropTypes.string.isRequired,
-  imageUrl: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   address: PropTypes.string.isRequired,
   creatorId: PropTypes.string.isRequired,
-  location: PropTypes.object.isRequired
+  location: PropTypes.object.isRequired,
+  onDelete: PropTypes.func.isRequired
 }
 
 export default PlaceItem
