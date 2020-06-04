@@ -9,6 +9,7 @@ import Card from '../../../shared/UI-elements/card'
 import AuthContext from '../../../shared/context/auth-context'
 import ErrorModal from '../../../shared/UI-elements/error-modal'
 import LoadingSpinner from '../../../shared/UI-elements/loading-spinner'
+import ImageUpload from '../../../shared/form-elements/image-upload'
 
 import './sign-up.css'
 
@@ -29,25 +30,22 @@ const SignUpForm = () => {
 
   const signupSubmitHandler = async (e) => {
     e.preventDefault()
-
     try {
       if (!isLoginMode) {
-        const { name, email, password } = formState.inputs
-        const responseData = await sendRequest(
+        const formData = new FormData()
+        const { name, email, password, image } = formState.inputs
+        formData.append('name', name.value)
+        formData.append('email', email.value)
+        formData.append('password', password.value)
+        formData.append('image', image.value)
+        const { userId, token } = await sendRequest(
           'http://localhost:3001/api/users/signup',
           'POST',
-          JSON.stringify({
-            name: name.value,
-            email: email.value,
-            password: password.value
-          }),
-          {
-            'Content-Type': 'application/json'
-          })
-        login(responseData.user.id)
+          formData)
+        login(userId, token)
       } else {
         const { email, password } = formState.inputs
-        const responseData = await sendRequest(
+        const { userId, token } = await sendRequest(
           'http://localhost:3001/api/users/login',
           'POST',
           JSON.stringify({
@@ -57,7 +55,7 @@ const SignUpForm = () => {
           {
             'Content-Type': 'application/json'
           })
-        login(responseData.user.id)
+        login(userId, token)
       }
     } catch (error) {
       console.log(error)
@@ -68,13 +66,18 @@ const SignUpForm = () => {
     if (!isLoginMode) {
       setFormData({
         ...formState.inputs,
-        name: undefined
+        name: undefined,
+        image: undefined
       }, formState.inputs.email.isValid && formState.inputs.password.isValid)
     } else {
       setFormData({
         ...formState.inputs,
         name: {
           value: '',
+          isValid: false
+        },
+        image: {
+          value: null,
           isValid: false
         }
       }, false)
@@ -99,6 +102,7 @@ const SignUpForm = () => {
             errorText="Please provide a valid email."
             onInput={inputHandler}
           />
+          {!isLoginMode && <ImageUpload id='image' errorText="Please provide an image." center onInput={inputHandler}/>}
           <Input
             id='password'
             element='input'
