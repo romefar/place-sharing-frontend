@@ -13,7 +13,7 @@ import LoadingSpinner from '../../../shared/UI-elements/loading-spinner'
 import './place-item.css'
 
 const PlaceItem = ({ id, image, title, description, address, creatorId, onDelete, location }) => {
-  const { userId } = useContext(AuthContext)
+  const { userId, token } = useContext(AuthContext)
   const [showMap, setMapVisibility] = useState(false)
   const [showConfirmModal, setConfirmModalVisibility] = useState(false)
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
@@ -26,7 +26,13 @@ const PlaceItem = ({ id, image, title, description, address, creatorId, onDelete
   const confirmDeleteHandler = async () => {
     closeDeleteModalHandler()
     try {
-      await sendRequest(`http://localhost:3001/api/places/${id}`, 'DELETE')
+      await sendRequest(
+        `http://localhost:3001/api/places/${id}`,
+        'DELETE',
+        null,
+        {
+          Authorization: `Bearer ${token}`
+        })
       onDelete(id)
     } catch (error) {
 
@@ -64,7 +70,7 @@ const PlaceItem = ({ id, image, title, description, address, creatorId, onDelete
       <li className="place-item">
         <Card className="place-item__content">
           <div className="place-item__image">
-            <img src={image} alt={title}/>
+            <img src={`http://localhost:3001/${image}`} alt={title}/>
           </div>
           <div className="place-item__info">
             <h2>{title}</h2>
