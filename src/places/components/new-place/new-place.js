@@ -9,12 +9,13 @@ import useHttpClient from '../../../shared/hooks/http-hook'
 import AuthContext from '../../../shared/context/auth-context'
 import ErrorModal from '../../../shared/UI-elements/error-modal'
 import LoadingSpinner from '../../../shared/UI-elements/loading-spinner'
+import ImageUpload from '../../../shared/form-elements/image-upload'
 
 import './new-place.css'
 
 const NewPlace = () => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
-  const { userId } = useContext(AuthContext)
+  const { token } = useContext(AuthContext)
   const history = useHistory()
   const [formState, inputHandler] = useForm({
     title: {
@@ -28,24 +29,28 @@ const NewPlace = () => {
     address: {
       value: '',
       isValid: false
+    },
+    image: {
+      value: null,
+      isValid: false
     }
   })
 
   const placeSubmitHandler = async (e) => {
     e.preventDefault()
     try {
-      const { title, description, address } = formState.inputs
+      const { title, description, address, image } = formState.inputs
+      const formData = new FormData()
+      formData.append('title', title.value)
+      formData.append('description', description.value)
+      formData.append('address', address.value)
+      formData.append('image', image.value)
       await sendRequest(
         'http://localhost:3001/api/places',
         'POST',
-        JSON.stringify({
-          title: title.value,
-          description: description.value,
-          address: address.value,
-          creatorId: userId
-        }),
+        formData,
         {
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${token}`
         }
       )
       history.push('/')
@@ -85,6 +90,7 @@ const NewPlace = () => {
           errorText="Please enter a valid address."
           onInput={inputHandler}
         />
+        <ImageUpload id="image" onInput={inputHandler} errorText="Please provide an image."/>
         <Button type="submit" disabled={!formState.isValid}>Add place</Button>
       </form>
     </Fragment>
