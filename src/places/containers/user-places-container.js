@@ -5,6 +5,7 @@ import PlaceList from '../components/place-list'
 import useHttpClient from '../../shared/hooks/http-hook'
 import ErrorModal from '../../shared/UI-elements/error-modal'
 import LoadingSpinner from '../../shared/UI-elements/loading-spinner'
+import httpConfig from '../../config/http-config'
 
 const UserPlacesContainer = () => {
   const userId = useParams().userId
@@ -14,7 +15,7 @@ const UserPlacesContainer = () => {
   useEffect(() => {
     const fetchUserPlaces = async () => {
       try {
-        const responseData = await sendRequest(`http://localhost:3001/api/places/user/${userId}`)
+        const responseData = await sendRequest(`${httpConfig.getDomain()}/api/places/user/${userId}`)
         setLoadedPlaces(responseData.places)
       } catch (error) {
       }
