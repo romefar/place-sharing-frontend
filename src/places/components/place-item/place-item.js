@@ -9,6 +9,7 @@ import AuthContext from '../../../shared/context/auth-context'
 import useHttpClient from '../../../shared/hooks/http-hook'
 import ErrorModal from '../../../shared/UI-elements/error-modal'
 import LoadingSpinner from '../../../shared/UI-elements/loading-spinner'
+import httpConfig from '../../../config/http-config'
 
 import './place-item.css'
 
@@ -27,7 +28,7 @@ const PlaceItem = ({ id, image, title, description, address, creatorId, onDelete
     closeDeleteModalHandler()
     try {
       await sendRequest(
-        `http://localhost:3001/api/places/${id}`,
+        `${httpConfig.getDomain()}/api/places/${id}`,
         'DELETE',
         null,
         {
@@ -50,7 +51,7 @@ const PlaceItem = ({ id, image, title, description, address, creatorId, onDelete
         footerClass="place-item__modal-actions"
         footerContent={<Button onClick={closeMapHandler}>Close</Button>}>
         <div className="map-container">
-          <Map center={location} zoom={12}/>
+          <Map center={location} zoom={18}/>
         </div>
       </Modal>
       <Modal
@@ -70,7 +71,7 @@ const PlaceItem = ({ id, image, title, description, address, creatorId, onDelete
       <li className="place-item">
         <Card className="place-item__content">
           <div className="place-item__image">
-            <img src={`http://localhost:3001/${image}`} alt={title}/>
+            <img src={`${httpConfig.getDomain()}/${image}`} alt={title}/>
           </div>
           <div className="place-item__info">
             <h2>{title}</h2>
