@@ -26,7 +26,7 @@ const inputReducer = (state, action) => {
   }
 }
 
-const Input = ({ id, label, type, placeholder = '', rows, element, validators, errorText = '', onInput, initialValue, initialValid }) => {
+const Input = ({ id, label, type, placeholder = null, rows, element, validators, errorText = '', onInput, initialValue, initialValid }) => {
   const [inputState, dispatch] = useReducer(inputReducer, {
     value: initialValue || '',
     isValid: initialValid || false,
@@ -66,6 +66,7 @@ const Input = ({ id, label, type, placeholder = '', rows, element, validators, e
       id={id}
       rows={rows || 3}
       onChange={changeHandler}
+      placeholder={placeholder}
       onBlur={touchHandler}
       value={value}
     />
