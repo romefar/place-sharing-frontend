@@ -3,13 +3,14 @@ import React, { useState, useContext, Fragment } from 'react'
 import Input from '../../../shared/form-elements/input'
 import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH, VALIDATOR_EMAIL } from '../../../shared/utils/validators'
 import Button from '../../../shared/form-elements/button'
-import useForm from '../../../shared/hooks/form-hook'
-import useHttpClient from '../../../shared/hooks/http-hook'
 import Card from '../../../shared/UI-elements/card'
 import AuthContext from '../../../shared/context/auth-context'
 import ErrorModal from '../../../shared/UI-elements/error-modal'
 import LoadingSpinner from '../../../shared/UI-elements/loading-spinner'
 import ImageUpload from '../../../shared/form-elements/image-upload'
+import httpConfig from '../../../config/http-config'
+import useForm from '../../../shared/hooks/form-hook'
+import useHttpClient from '../../../shared/hooks/http-hook'
 
 import './sign-up.css'
 
@@ -39,14 +40,14 @@ const SignUpForm = () => {
         formData.append('password', password.value)
         formData.append('image', image.value)
         const { userId, token } = await sendRequest(
-          'http://localhost:3001/api/users/signup',
+          `${httpConfig.getDomain()}/api/users/signup`,
           'POST',
           formData)
         login(userId, token)
       } else {
         const { email, password } = formState.inputs
         const { userId, token } = await sendRequest(
-          'http://localhost:3001/api/users/login',
+          `${httpConfig.getDomain()}/api/users/login`,
           'POST',
           JSON.stringify({
             email: email.value,
