@@ -2,9 +2,10 @@ import React from 'react'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 
 import UserContainer from '../user/containers/user-container'
-import MainNavigation from '../shared/navigation/main-navigation'
 import UserPlacesContainer from '../places/containers/user-places-container'
 import SignUpContainer from '../authorization/containers/sign-up-container'
+import Footer from '../shared/footer'
+import MainNavigation from '../shared/navigation/main-navigation'
 import NewPlace from '../places/components/new-place'
 import UpdatePlace from '../places/components/update-place'
 import AuthContext from '../shared/context/auth-context'
@@ -42,6 +43,7 @@ const App = () => {
         <main>
           {routes}
         </main>
+        <Footer />
       </Router>
     </AuthContext.Provider>
   )
