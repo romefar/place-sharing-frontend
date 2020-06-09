@@ -10,6 +10,7 @@ import useHttpClient from '../../../shared/hooks/http-hook'
 import ErrorModal from '../../../shared/UI-elements/error-modal'
 import LoadingSpinner from '../../../shared/UI-elements/loading-spinner'
 import AuthContext from '../../../shared/context/auth-context'
+import httpConfig from '../../../config/http-config'
 
 import './update-place.css'
 
@@ -34,7 +35,7 @@ const UpdatePlace = () => {
     e.preventDefault()
     try {
       await sendRequest(
-        `http://localhost:3001/api/places/${placeId}`,
+        `${httpConfig.getDomain()}/api/places/${placeId}`,
         'PATCH',
         JSON.stringify({
           title: formState.inputs.title.value,
@@ -53,7 +54,7 @@ const UpdatePlace = () => {
   useEffect(() => {
     const fetchUserPlaces = async () => {
       try {
-        const responseData = await sendRequest(`http://localhost:3001/api/places/${placeId}`)
+        const responseData = await sendRequest(`${httpConfig.getDomain()}/api/places/${placeId}`)
         setLoadedPlace(responseData.place)
         setFormData({
           title: {
