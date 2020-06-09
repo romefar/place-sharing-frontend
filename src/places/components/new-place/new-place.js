@@ -2,14 +2,15 @@ import React, { useContext, Fragment } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import Input from '../../../shared/form-elements/input'
-import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from '../../../shared/utils/validators'
 import Button from '../../../shared/form-elements/button'
-import useForm from '../../../shared/hooks/form-hook'
-import useHttpClient from '../../../shared/hooks/http-hook'
+import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from '../../../shared/utils/validators'
 import AuthContext from '../../../shared/context/auth-context'
 import ErrorModal from '../../../shared/UI-elements/error-modal'
 import LoadingSpinner from '../../../shared/UI-elements/loading-spinner'
 import ImageUpload from '../../../shared/form-elements/image-upload'
+import useForm from '../../../shared/hooks/form-hook'
+import useHttpClient from '../../../shared/hooks/http-hook'
+import httpConfig from '../../../config/http-config'
 
 import './new-place.css'
 
@@ -46,7 +47,7 @@ const NewPlace = () => {
       formData.append('address', address.value)
       formData.append('image', image.value)
       await sendRequest(
-        'http://localhost:3001/api/places',
+        `${httpConfig.getDomain()}/api/places`,
         'POST',
         formData,
         {
@@ -71,6 +72,7 @@ const NewPlace = () => {
           label='Title'
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Please provide a valid title."
+          placeholder='Title for your place item'
           onInput={inputHandler}
         />
         <Input
@@ -79,6 +81,7 @@ const NewPlace = () => {
           label='Description'
           validators={[VALIDATOR_MINLENGTH(5)]}
           errorText="Please enter a valid description (at least 5 characters)."
+          placeholder='Description for your place item (at least 5 characters)'
           onInput={inputHandler}
         />
         <Input
@@ -88,6 +91,7 @@ const NewPlace = () => {
           type='text'
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Please enter a valid address."
+          placeholder='Human readable address for your place item'
           onInput={inputHandler}
         />
         <ImageUpload id="image" onInput={inputHandler} errorText="Please provide an image."/>
