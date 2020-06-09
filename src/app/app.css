@@ -13,6 +13,11 @@ body {
   background: #4d4d4d;
 }
 
+#root { 
+  min-height: calc(100vh - 80px);
+  position: relative;
+}
+
 .slide-in-left-enter {
   transform: translateX(-100%);
 }
